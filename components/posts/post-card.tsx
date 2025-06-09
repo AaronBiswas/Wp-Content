@@ -28,49 +28,39 @@ export async function PostCard({ post }: { post: Post }) {
     <Link
       href={`/posts/${post.slug}`}
       className={cn(
-        "border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8",
-        "hover:bg-accent/75 transition-all"
+        "p-8 rounded-xl group flex flex-col gap-8 transition-shadow hover:shadow-lg bg-transparent border-none"
       )}
     >
       <div className="flex flex-col gap-4">
-        <div className="h-48 w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
-          {media?.source_url ? (
-            <Image
-              className="h-full w-full object-cover"
-              src={media.source_url}
-              alt={post.title?.rendered || "Post thumbnail"}
-              width={400}
-              height={200}
-            />
-          ) : (
-            <div className="flex items-center justify-center w-full h-full text-muted-foreground">
-              No image available
-            </div>
-          )}
-        </div>
+        {media?.source_url && (
+          <Image
+            className="rounded-lg object-cover w-full h-64"
+            src={media.source_url}
+            alt={post.title?.rendered || "Post thumbnail"}
+            width={800}
+            height={320}
+            priority
+          />
+        )}
         <div
           dangerouslySetInnerHTML={{
             __html: post.title?.rendered || "Untitled Post",
           }}
-          className="text-xl text-primary font-medium group-hover:underline decoration-muted-foreground underline-offset-4 decoration-dotted transition-all"
+          className="text-3xl text-primary font-bold group-hover:underline underline-offset-4"
         ></div>
         <div
-          className="text-sm"
+          className="text-lg text-muted-foreground"
           dangerouslySetInnerHTML={{
             __html: post.excerpt?.rendered
-              ? post.excerpt.rendered.split(" ").slice(0, 12).join(" ").trim() +
+              ? post.excerpt.rendered.split(" ").slice(0, 24).join(" ").trim() +
                 "..."
               : "No excerpt available",
           }}
         ></div>
       </div>
-
-      <div className="flex flex-col gap-4">
-        <hr />
-        <div className="flex justify-between items-center text-xs">
-          <p>{category?.name || "Uncategorized"}</p>
-          <p>{date}</p>
-        </div>
+      <div className="flex flex-col items-start text-base text-muted-foreground mt-4 gap-1">
+        <span>{category?.name || "Uncategorized"}</span>
+        <span>{date}</span>
       </div>
     </Link>
   );

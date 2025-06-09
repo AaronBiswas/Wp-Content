@@ -18,7 +18,7 @@ export default async function Page() {
     <Section>
       <Container className="space-y-6">
         <Prose className="mb-8">
-          <h2>All Tags</h2>
+          <h2>Tags</h2>
           <ul className="grid">
             {tags.map((tag) => (
               <li key={tag.id}>

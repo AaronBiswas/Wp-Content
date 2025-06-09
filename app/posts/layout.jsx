@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-
+import { Separator } from "@/components/ui/separator";
 
 export const metadata = {
   title: "Create Next App",
@@ -10,6 +10,7 @@ export default function PostLayout({ children }) {
   return (
     <main>
       {children}
+      <Separator />
       <Footer />
     </main>
   );

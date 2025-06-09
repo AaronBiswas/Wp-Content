@@ -177,12 +177,13 @@ const styles = {
       "[&_.footnote-backref]:no-underline hover:[&_.footnote-backref]:underline",
     ],
   },
-  layout: {
-    spacing: "[&>*+*]:mt-6",
-    article: "max-w-prose",
-    container: "max-w-5xl mx-auto p-6 sm:p-8",
-    section: "py-8 md:py-12",
-  },
+
+ layout: {
+  spacing: "[&>*+*]:mt-6",
+  article: "max-w-prose",
+  container: "w-full min-h-screen p-6 sm:p-8",
+  section: "py-8 md:py-12",
+}
 };
 
 // Combine all typography styles

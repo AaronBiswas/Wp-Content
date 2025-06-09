@@ -32,7 +32,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/nav/navbar.jsx"  ],
   "exclude": [
     "node_modules"
   ]
