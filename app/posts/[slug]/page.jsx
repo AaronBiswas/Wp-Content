@@ -14,7 +14,6 @@ import { siteConfig } from "@/app/site.config";
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 
-
 export async function generateStaticParams() {
   const posts = await getAllPosts();
 
@@ -33,7 +32,6 @@ export async function generateMetadata({ params }) {
 
   const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
   ogUrl.searchParams.append("title", post.title.rendered);
-  // Strip HTML tags for description
   const description = post.excerpt.rendered.replace(/<[^>]*>/g, "").trim();
   ogUrl.searchParams.append("description", description);
 
@@ -79,48 +77,100 @@ export default async function Page({ params }) {
 
   return (
     <Section>
-      <Container>
-        <Prose>
-          <h1>
-            <Balancer>
-              <span
-                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-              ></span>
-            </Balancer>
-          </h1>
-          <div className="flex justify-between items-center gap-4 text-sm mb-4">
-            <h5>
-              Published {date} by{" "}
-              {author.name && (
-                <span>
-                  <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
-                </span>
-              )}
-            </h5>
+      <Container className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto mb-6 sm:mb-8">
+          <Prose className="text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 sm:mb-6 px-2 sm:px-0">
+              <Balancer>
+                <span
+                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                ></span>
+              </Balancer>
+            </h1>
 
-            <Link
-              href={`/posts/?category=${category.id}`}
-              className={cn(
-                badgeVariants({ variant: "outline" }),
-                "!no-underline"
-              )}
-            >
-              {category.name}
-            </Link>
-          </div>
-          {featuredMedia?.source_url && (
-            <div className="h-96 my-12 md:h-[500px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
-              {/* eslint-disable-next-line */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 text-sm text-muted-foreground mb-6 sm:mb-8 border-b pb-4 sm:pb-6 px-2 sm:px-0">
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/posts/?category=${category.id}`}
+                  className={cn(
+                    badgeVariants({ variant: "outline" }),
+                    "!no-underline text-xs uppercase font-semibold px-3 py-1"
+                  )}
+                >
+                  {category.name}
+                </Link>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                <span className="whitespace-nowrap">Published {date}</span>
+                {author.name && (
+                  <>
+                    <span className="hidden sm:inline">•</span>
+                    <span className="whitespace-nowrap">
+                      By{" "}
+                      <Link
+                        href={`/posts/?author=${author.id}`}
+                        className="font-medium hover:underline"
+                      >
+                        {author.name}
+                      </Link>
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          </Prose>
+        </div>
+
+        {featuredMedia?.source_url && (
+          <div className="mb-8 sm:mb-12 -mx-4 sm:mx-0">
+            <div className="relative h-48 sm:h-64 md:h-96 lg:h-[500px] overflow-hidden sm:rounded-lg bg-accent/25">
               <img
                 className="w-full h-full object-cover"
                 src={featuredMedia.source_url}
                 alt={post.title.rendered}
               />
             </div>
-          )}
-        </Prose>
+            {featuredMedia.caption && (
+              <p className="text-sm text-muted-foreground mt-2 text-center italic max-w-2xl mx-auto px-4 sm:px-0">
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: featuredMedia.caption.rendered,
+                  }}
+                />
+              </p>
+            )}
+          </div>
+        )}
 
-        <Article dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+        <div className="max-w-2xl mx-auto px-4 sm:px-0">
+          <Article
+            className="prose prose-sm sm:prose-base lg:prose-lg max-w-none leading-relaxed 
+                     prose-headings:font-semibold prose-headings:leading-tight
+                     prose-p:mb-4 prose-p:leading-relaxed
+                     prose-img:rounded-lg prose-img:my-6
+                     prose-blockquote:border-l-4 prose-blockquote:border-accent
+                     prose-blockquote:pl-4 prose-blockquote:italic
+                     prose-ul:my-4 prose-ol:my-4
+                     prose-li:mb-2"
+            dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+          />
+        </div>
+
+        <div className="max-w-2xl mx-auto mt-8 sm:mt-12 pt-6 sm:pt-8 border-t px-4 sm:px-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 text-sm text-muted-foreground">
+            <div className="text-center sm:text-left">Last updated: {date}</div>
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <span>Filed under:</span>
+              <Link
+                href={`/posts/?category=${category.id}`}
+                className="font-medium hover:underline"
+              >
+                {category.name}
+              </Link>
+            </div>
+          </div>
+        </div>
       </Container>
     </Section>
   );

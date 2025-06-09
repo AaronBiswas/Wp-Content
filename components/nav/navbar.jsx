@@ -35,6 +35,7 @@ export function Navbar({ className }) {
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </Link>
           ))}
+          <ThemeToggle />
         </nav>
 
         <div className="md:hidden">

@@ -26,7 +26,7 @@ export default async function CompactPostCard({ post }) {
     <Link
       href={`/posts/${post.slug}`}
       className={cn(
-        "group flex flex-col gap-3 transition-shadow hover:shadow-md rounded-lg overflow-hidden bg-transparent border-none"
+        "group flex flex-col gap-3 transition-shadow shadow-sm hover:shadow-md rounded-lg overflow-hidden bg-transparent border-none"
       )}
     >
       {media?.source_url && (
