@@ -16,11 +16,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.variable} suppressHydrationWarning>
+      <body className={`${inter.variable} dark:text-white`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
           <main className="min-h-screen">
-            {children}
+            <div className="dark:text-white">
+              {children}
+            </div>
           </main>
         </ThemeProvider>
       </body>

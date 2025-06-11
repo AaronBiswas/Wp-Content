@@ -152,7 +152,9 @@ export default async function Page({ params }) {
                      prose-blockquote:border-l-4 prose-blockquote:border-accent
                      prose-blockquote:pl-4 prose-blockquote:italic
                      prose-ul:my-4 prose-ol:my-4
-                     prose-li:mb-2"
+                     prose-li:mb-2
+                     dark:text-white
+                     text-justify"
             dangerouslySetInnerHTML={{ __html: post.content.rendered }}
           />
         </div>
