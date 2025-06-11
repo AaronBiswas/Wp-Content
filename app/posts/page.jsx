@@ -19,7 +19,6 @@ import {
 
 import { Section, Container, Prose } from "@/components/craft";
 import { PostCard } from "@/components/posts/post-card";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
 import Selector from "@/components/nav/Selector";
 import { Separator } from "@/components/ui/separator";
 import RecentPosts from "@/components/posts/recent-posts";
@@ -61,6 +60,24 @@ export default async function Page({ searchParams }) {
     return `/posts${params.toString() ? `?${params.toString()}` : ""}`;
   };
 
+  const allPublished = posts.filter((p) => p.status === "publish");
+
+  const sidePosts = allPublished
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 3);
+  const sidePostIds = new Set(sidePosts.map((p) => p.id));
+
+  const recentPosts = allPublished
+    .filter((p) => !sidePostIds.has(p.id))
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 4);
+
+  const recentPostIds = new Set(recentPosts.map((p) => p.id));
+
+  const filteredPaginatedPosts = paginatedPosts.filter(
+    (post) => !recentPostIds.has(post.id) && !sidePostIds.has(post.id)
+  );
+
   return (
     <Section>
       <Container className="px-4 sm:px-6 lg:px-8">
@@ -83,18 +100,17 @@ export default async function Page({ searchParams }) {
 
           <div className="w-full">
             <div className="mb-4 sm:mb-6">
-              <RecentPosts count={4} />
+              <RecentPosts posts={recentPosts} />
             </div>
           </div>
 
           <Separator />
 
-          {paginatedPosts.length > 0 ? (
+          {filteredPaginatedPosts.length > 0 ? (
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-              {/* Main Posts Grid */}
               <div className="flex-1">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {paginatedPosts.map((post) => (
+                  {filteredPaginatedPosts.map((post) => (
                     <div key={post.id} className="w-full">
                       <PostCard post={post} />
                     </div>
@@ -108,7 +124,7 @@ export default async function Page({ searchParams }) {
                     You might also like!
                   </h2>
                   <div className="flex flex-col gap-4 sm:gap-6">
-                    {posts.slice(0, 3).map((post) => (
+                    {sidePosts.map((post) => (
                       <div key={`sidebar-${post.id}`} className="w-full">
                         <PostCard post={post} />
                       </div>
@@ -131,10 +147,9 @@ export default async function Page({ searchParams }) {
                 <PaginationContent className="flex-wrap gap-1 sm:gap-2">
                   <PaginationItem>
                     <PaginationPrevious
-                      className={cn(
-                        "text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2",
+                      className={
                         page <= 1 ? "pointer-events-none opacity-50" : ""
-                      )}
+                      }
                       href={createPaginationUrl(page - 1)}
                     />
                   </PaginationItem>
@@ -144,9 +159,7 @@ export default async function Page({ searchParams }) {
                     const maxVisiblePages = 5;
 
                     if (totalPages <= maxVisiblePages) {
-                      for (let i = 1; i <= totalPages; i++) {
-                        showPages.push(i);
-                      }
+                      for (let i = 1; i <= totalPages; i++) showPages.push(i);
                     } else {
                       const startPage = Math.max(1, page - 2);
                       const endPage = Math.min(totalPages, page + 2);
@@ -156,9 +169,8 @@ export default async function Page({ searchParams }) {
                         if (startPage > 2) showPages.push("...");
                       }
 
-                      for (let i = startPage; i <= endPage; i++) {
+                      for (let i = startPage; i <= endPage; i++)
                         showPages.push(i);
-                      }
 
                       if (endPage < totalPages) {
                         if (endPage < totalPages - 1) showPages.push("...");
@@ -187,12 +199,11 @@ export default async function Page({ searchParams }) {
 
                   <PaginationItem>
                     <PaginationNext
-                      className={cn(
-                        "text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2",
+                      className={
                         page >= totalPages
                           ? "pointer-events-none opacity-50"
                           : ""
-                      )}
+                      }
                       href={createPaginationUrl(page + 1)}
                     />
                   </PaginationItem>
